@@ -6,21 +6,27 @@ from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
 import pickle 
+import joblib
 
 app = Flask(__name__)
 cors = CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
 
 
-rf_model = pickle.load(open('./test_model.pickle', 'rb'))
+rf_model = joblib.load('./finalized_model-3.pickle')
 
 
 
 @app.route('/', methods=["POST", "GET"])
 @cross_origin()
 def index():
-    result = rf_model.predict(create_df(request.json))
-    return jsonify(result)
+    print(22, rf_model)
+    input_df = create_df(request.json)[['afe0_m0_0', 'afe0_m0_1', 'afe0_m0_2', 'afe0_m0_3', 'afe0_m0_4', 'afe0_m0_5']]
+    print('input_df', input_df)
+    result = rf_model.predict(input_df)
+
+    print(result)
+    return jsonify(result.tolist())
 
 
 
@@ -49,6 +55,8 @@ def flatten_json(nestedjson):
 
 def create_df(data):
   flattened_data = [flatten_json(item) for item in data]
+
+  print(pd.DataFrame(flattened_data))
   return pd.DataFrame(flattened_data)
 
 
