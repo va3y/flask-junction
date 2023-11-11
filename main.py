@@ -13,7 +13,7 @@ cors = CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
 
 
-rf_model = joblib.load('./finalized_model-3.pickle')
+rf_model = joblib.load('./finalized_model-4.pickle')
 
 
 
